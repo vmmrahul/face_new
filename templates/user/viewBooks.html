@@ -1,0 +1,68 @@
+{% extends 'user/user_bash.html' %}
+{% load static %}
+
+
+{% block title %}
+    Book
+{% endblock %}
+
+{% block content %}
+    <div>
+        <div class="text-center">
+            <h1 class="comman-title">Books</h1>
+        </div>
+        <hr style="height: 2px; background: red">
+        <div>
+            <a href="{% url 'addbook' %}" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add Books</a>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover" id="myTable">
+                <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>title</th>
+                    <th>sectionName</th>
+                    <th>qty</th>
+                    <th>edition</th>
+                    <th>descripiton</th>
+                    <th>author</th>
+                    <th>price</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for re in result %}
+                    <tr>
+                    <td>{{ re.ISBN }}</td>
+                    <td>{{ re.title }}</td>
+                    <td>{{ re.sectionName }}</td>
+                    <td>{{ re.qty }}</td>
+                    <td>{{ re.edition }}</td>
+                    <td>{{ re.descripiton }}</td>
+                    <td>{{ re.author }}</td>
+                    <td>{{ re.price }}</td>
+                    <td>
+                        <a href="deleteBook?id={{ re.id }}" onclick="return confirm('Are you Sure to Delete')" class="btn btn-danger">Delete</a>
+                    </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

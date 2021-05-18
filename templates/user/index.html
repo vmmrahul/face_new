@@ -1,0 +1,11 @@
+{% extends 'user/user_bash.html' %}
+{% load static %}
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+    <div class="jumbotron text-center">
+        <h1>Wellcome Back {{ request.session.userLogin.name }}</h1>
+    </div>
+{% endblock %}

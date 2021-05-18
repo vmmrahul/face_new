@@ -1,0 +1,62 @@
+{% extends 'user/user_bash.html' %}
+{% load static %}
+{% block title %}
+    Section
+{% endblock %}
+
+{% block content %}
+    <div>
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h2 class="card-title text-white">Add Section</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                <strong>{{ message }}</strong>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Descripiton">Descripiton</label>
+                        <input type="text" id="Descripiton" name="Descripiton" class="form-control"
+                               placeholder="Descripiton" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Locations">Locations</label>
+                        <input type="text" id="Locations" name="Locations" class="form-control" placeholder="Locations"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <label for="incharge">Incharge</label>
+                        <input type="text" id="incharge" name="incharge" class="form-control" placeholder="Incharge"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile">Mobile</label>
+                        <input type="number" id="mobile" name="mobile" class="form-control" placeholder="Mobile"
+                               required>
+                    </div>
+                    <div class="form-group text-center">
+                        <button class="btn btn-primary w-25">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'user/user_bash.html' %}
+{% load static %}
+
+
+{% block content %}
+    <div>
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h2 class="card-title text-white">Add Books</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                <strong>{{ message }}</strong>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="form-group">
+                        <label for="section">Section</label>
+                        {% if result != 'No' %}
+                            <select name="section" id="section" class="form-control">
+                                {% for foo in result %}
+                                    <option value="{{ foo.id }}">{{ foo.name }}</option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            <input type="text" value="{{ id }}" name="section" id="section" class="form-control" readonly>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="title">title</label>
+                        <input type="text" id="title" name="title" class="form-control" placeholder="Title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ISBN">ISBN</label>
+                        <input type="text" id="ISBN" name="ISBN" class="form-control" placeholder="ISBN" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="QTY">QTY</label>
+                        <input type="number" id="QTY" name="QTY" class="form-control" placeholder="QTY" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Edition">Edition</label>
+                        <input type="text" id="Edition" name="Edition" class="form-control" placeholder="Edition"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Descripiton">Descripiton</label>
+                        <input type="text" id="Descripiton" name="Descripiton" class="form-control"
+                               placeholder="Descripiton" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Author">Author</label>
+                        <input type="text" id="Author" name="Author" class="form-control" placeholder="Author"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">price</label>
+                        <input type="text" id="price" name="price" class="form-control" placeholder="price"
+                               required>
+                    </div>
+                    <div class="form-group text-center">
+                        <button class="btn btn-primary w-25">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

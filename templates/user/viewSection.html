@@ -1,0 +1,96 @@
+{% extends 'user/user_bash.html' %}
+{% load static %}
+{% block title %}
+    View Sections
+{% endblock %}
+{% block style %}
+    <style>
+        /*comman title*/
+        .comman-title {
+            display: inline-block;
+            font-size: 2rem;
+            font-weight: 500;
+            text-shadow: 2px 2px 5px #aaa;
+            transition: all .5s;
+        }
+
+        .comman-title:first-letter {
+            color: red;
+            font-family: 'Great Vibes', cursive;
+            font-size: 4rem;
+            font-style: normal;
+            margin-right: 10px;
+        }
+
+        .comman-title:hover {
+            transform: translate(-5px, -3px);
+            text-shadow: 2px 5px 20px #aaa;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div>
+        <div class="text-center">
+            <h1 class="comman-title">Section</h1>
+        </div>
+        <hr style="height: 2px; background: red">
+        <div>
+            <a href="addSection" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add Section</a>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="table-responsive pt-4">
+                <table class="table table-striped" id="myTable">
+                    <thead>
+                    <tr class="text-center">
+                        <th>Name</th>
+                        <th>Descripiton</th>
+                        <th>Locations</th>
+                        <th>Incharge</th>
+                        <th>Email</th>
+                        <th>mobile</th>
+                        <th >Delete</th>
+                        <th >Book</th>
+                        <th >E-Book</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for datum in data %}
+                        <tr>
+                            <td>{{ datum.name }}</td>
+                            <td>{{ datum.description }}</td>
+                            <td>{{ datum.location }}</td>
+                            <td>{{ datum.sectionIncharge }}</td>
+                            <td>{{ datum.email }}</td>
+                            <td>{{ datum.mobile }}</td>
+                            <td><a href="deleteSection?id={{ datum.id }}"
+                                   onclick="return confirm('are you sure to Delete?')" class="btn btn-danger">Delete</a>
+                            </td>
+                            <td>
+                                <a href="addbook?id={{ datum.id }}" class="btn btn-info"><i
+                                        class="fas fa-plus-circle"></i> Books</a>
+                            </td>
+                            <td>
+                                <a href="addEbook?id={{ datum.id }}" class="btn btn-info"><i
+                                        class="fas fa-plus-circle"></i> E-Books</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
