@@ -1,6 +1,6 @@
 import datetime
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from pymysql import *
 from django.contrib import messages
@@ -187,8 +187,21 @@ def viewMembers(request):
     cr = conn.cursor()
     cr.execute(query)
     result = cr.fetchall()
-    return render(request, 'adminWork/viewMember.html',{'status':status,'result':result})
+    columnName=[name[0] for name in cr.description]
+    print(columnName)
+    return render(request, 'adminWork/viewMember.html',{'status':status,'result':result,'columnName':columnName})
 
+def changeMemberStatus(request):
+    id = request.GET['id']
+    status = request.GET['status']
+
+    query = "UPDATE `membership` SET `membershipStatus`='{}' WHERE `id` ='{}'".format(status,id)
+    conn = makeConnections()
+    cr = conn.cursor()
+    cr.execute(query)
+    conn.commit()
+    messages.success(request, 'Success Fully Updated Member Status')
+    return HttpResponseRedirect('viewMembers?status={}'.format(status))
 
 
 # Client Side Work

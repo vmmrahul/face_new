@@ -10,8 +10,21 @@
             <h1>Manage Library</h1>
         </div>
 
+
         <div class="form-group">
-            <a href="addMeber" class="btn btn-success"><i class="fas fa-plus-circle"></i> Add Library</a>
+            <a href="addMeber" class="btn btn-success"><i class="fas fa-plus-circle"></i> Add Member</a>
+        </div>
+        <div class="form-group">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        <strong>{{ message }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
         <hr>
         <ul class="nav nav-pills nav-fill">
@@ -33,7 +46,46 @@
         </ul>
         <hr>
         <div class="table-responsive">
-            {{ result }}
+            <table class="table">
+                <thead class="table-dark text-white">
+                <tr>
+                    {% for foo in columnName %}
+                        <td>{{ foo }}</td>
+                    {% endfor %}
+                    <td>Action</td>
+                </tr>
+                </thead>
+                <tbody class="table-hover small">
+                {% for re in result %}
+                    <tr>
+                        <td><a href="">{{ re.id }}</a></td>
+                        <td>{{ re.dateofjoining }}</td>
+                        <td>{{ re.campus }}</td>
+                        <td>{{ re.department }}</td>
+                        <td>{{ re.typeOfMember }}</td>
+                        <td>{{ re.membershipStatus }}</td>
+                        <td>{{ re.nocDate }}</td>
+                        <td>{{ re.remarks }}</td>
+                        <td class="d-flex">
+                            {% if re.membershipStatus == 'Pending' %}
+                                <a href="changeMemberStatus?id={{ re.id }}&status=Block" class="btn btn-danger mr-2">Block</a>
+                                <a href="changeMemberStatus?id={{ re.id }}&status=Active"
+                                   class="btn btn-primary">Active</a>
+                            {% elif re.membershipStatus == 'Active' %}
+                                <a href="changeMemberStatus?id={{ re.id }}&status=Block" class="btn btn-danger mr-2">Block</a>
+                                <a href="changeMemberStatus?id={{ re.id }}&status=Pending"
+                                   class="btn btn-warning">Pending</a>
+                            {% else %}
+                                <a href="changeMemberStatus?id={{ re.id }}&status=Active" class="btn btn-primary mr-2">Active</a>
+                                <a href="changeMemberStatus?id={{ re.id }}&status=Pending"
+                                   class="btn btn-warning">Pending</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}

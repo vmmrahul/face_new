@@ -28,6 +28,7 @@ urlpatterns = [
     # add member
     path('addMeber', addMeber, name='addMeber'),
     path('viewMembers', viewMembers, name='viewMembers'),
+    path('changeMemberStatus', changeMemberStatus, name='viewMembers'),
 
     #     addLibrary
     path('addLibrary', addLibrary, name='addLibrary'),
