@@ -1,0 +1,39 @@
+{% extends 'adminWork/base.html' %}
+
+{% block title %}
+    view Members
+{% endblock %}
+
+{% block content %}
+    <div>
+        <div class="text-center">
+            <h1>Manage Library</h1>
+        </div>
+
+        <div class="form-group">
+            <a href="addMeber" class="btn btn-success"><i class="fas fa-plus-circle"></i> Add Library</a>
+        </div>
+        <hr>
+        <ul class="nav nav-pills nav-fill">
+            <li class="nav-item">
+                <a class="nav-link {% if status == 'Pending' %}
+                active
+                {% endif %}" aria-current="page" href="viewMembers?status=Pending">Pending</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status == 'Active' %}
+                active
+                {% endif %}" href="viewMembers?status=Active">Active</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status == 'Block' %}
+                active
+                {% endif %}" href="viewMembers?status=Block">Block</a>
+            </li>
+        </ul>
+        <hr>
+        <div class="table-responsive">
+            {{ result }}
+        </div>
+    </div>
+{% endblock %}

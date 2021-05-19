@@ -25,6 +25,10 @@ urlpatterns = [
     path('changePassword', changePassword, name='changePassword'),
     path('changePassword', changePassword, name='changePassword'),
 
+    # add member
+    path('addMeber', addMeber, name='addMeber'),
+    path('viewMembers', viewMembers, name='viewMembers'),
+
     #     addLibrary
     path('addLibrary', addLibrary, name='addLibrary'),
     path('ViewLibrary', ViewLibrary, name='ViewLibrary'),

@@ -3,6 +3,100 @@
 {% block title %}
     Add Member
 {% endblock %}
-{% block content %}
 
+{% block style %}
+    <style>
+        .shaddow {
+            -webkit-box-shadow: 3px 21px 28px -9px rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 3px 21px 28px -9px rgba(0, 0, 0, 0.75);
+            box-shadow: 3px 21px 28px -9px rgba(0, 0, 0, 0.75);
+            transition:  all 1s;
+        }
+
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="card shaddow">
+        <div class="card-header">
+            <h1>Add Member</h1>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <form action="" method="post">{% csrf_token %}
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="dateofJoin">Date of Joining</label>
+                            <input type="date" class="form-control" required placeholder="date of Join" id="dateofJoin"
+                                   name="dateofJoin">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="campus">Campus Name</label>
+                            <input type="text" class="form-control" placeholder="campus" id="campus" name="campus"
+                                   required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="department">Department</label>
+                            <input type="text" class="form-control" placeholder="department" id="department"
+                                   name="department" required>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="typeofmember">Member Type</label>
+                            <select name="typeofmember" id="typeofmember" class="form-control">
+                                <option value="teacher">Teacher</option>
+                                <option value="student">Student</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="nocDate">NOC Date</label>
+                            <input type="date" class="form-control" required placeholder="NOC Date" id="nocDate"
+                                   name="nocDate">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="membershipStatus">membership Status</label>
+                            <select name="membershipStatus" id="membershipStatus" class="form-control">
+                                <option value="Pending">Pending</option>
+                                <option value="Active">Active</option>
+                                <option value="Block">Block</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="remarks">Remarks</label>
+                    <textarea name="remarks" id="remarks" cols="30" rows="10" class="form-control"></textarea>
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-success w-25">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}

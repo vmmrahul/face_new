@@ -162,9 +162,32 @@ def editLibrary(request, id):
 
 
 def addMeber(request):
-    return render(request,'')
+    if request.method == 'POST':
+        print(request.POST)
+        dateofJoin = request.POST['dateofJoin']
+        campus = request.POST['campus']
+        department = request.POST['department']
+        typeofmember = request.POST['typeofmember']
+        nocDate = request.POST['nocDate']
+        membershipStatus = request.POST['membershipStatus']
+        remarks = request.POST['remarks']
+        query =f"INSERT INTO `membership`(`dateofjoining`, `campus`, `department`, `typeOfMember`, `membershipStatus`, `nocDate`, `remarks`) VALUES ('{dateofJoin}','{campus}','{department}','{typeofmember}','{membershipStatus}','{nocDate}','{remarks}')"
+        print(query)
+        conn = makeConnections()
+        cr = conn.cursor()
+        cr.execute(query)
+        conn.commit()
+        messages.success(request, 'Success Fully member added.')
+    return render(request,'adminWork/addMember.html')
 
-
+def viewMembers(request):
+    status = request.GET['status']
+    query ="SELECT * FROM `membership` WHERE `membershipStatus`='{}'".format(status)
+    conn = makeConnections()
+    cr = conn.cursor()
+    cr.execute(query)
+    result = cr.fetchall()
+    return render(request, 'adminWork/viewMember.html',{'status':status,'result':result})
 
 
 
