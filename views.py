@@ -171,31 +171,33 @@ def addMeber(request):
         nocDate = request.POST['nocDate']
         membershipStatus = request.POST['membershipStatus']
         remarks = request.POST['remarks']
-        query =f"INSERT INTO `membership`(`dateofjoining`, `campus`, `department`, `typeOfMember`, `membershipStatus`, `nocDate`, `remarks`) VALUES ('{dateofJoin}','{campus}','{department}','{typeofmember}','{membershipStatus}','{nocDate}','{remarks}')"
+        query = f"INSERT INTO `membership`(`dateofjoining`, `campus`, `department`, `typeOfMember`, `membershipStatus`, `nocDate`, `remarks`) VALUES ('{dateofJoin}','{campus}','{department}','{typeofmember}','{membershipStatus}','{nocDate}','{remarks}')"
         print(query)
         conn = makeConnections()
         cr = conn.cursor()
         cr.execute(query)
         conn.commit()
         messages.success(request, 'Success Fully member added.')
-    return render(request,'adminWork/addMember.html')
+    return render(request, 'adminWork/addMember.html')
+
 
 def viewMembers(request):
     status = request.GET['status']
-    query ="SELECT * FROM `membership` WHERE `membershipStatus`='{}'".format(status)
+    query = "SELECT * FROM `membership` WHERE `membershipStatus`='{}'".format(status)
     conn = makeConnections()
     cr = conn.cursor()
     cr.execute(query)
     result = cr.fetchall()
-    columnName=[name[0] for name in cr.description]
+    columnName = [name[0] for name in cr.description]
     print(columnName)
-    return render(request, 'adminWork/viewMember.html',{'status':status,'result':result,'columnName':columnName})
+    return render(request, 'adminWork/viewMember.html', {'status': status, 'result': result, 'columnName': columnName})
+
 
 def changeMemberStatus(request):
     id = request.GET['id']
     status = request.GET['status']
 
-    query = "UPDATE `membership` SET `membershipStatus`='{}' WHERE `id` ='{}'".format(status,id)
+    query = "UPDATE `membership` SET `membershipStatus`='{}' WHERE `id` ='{}'".format(status, id)
     conn = makeConnections()
     cr = conn.cursor()
     cr.execute(query)
@@ -315,15 +317,20 @@ def addbook(request):
 
 
 def viewBook(request):
+    if 'memberid' in request.GET:
+        memberid = request.GET['memberid']
+    else:
+        memberid = 'No'
     query = "SELECT books.id,books.ISBN, books.title,books.section,section.name as sectionName, books.qty,books.edition, books.descripiton,books.author,books.price FROM `books` INNER JOIN section on books.section = section.id"
     conn = makeConnections()
     cr = conn.cursor()
     cr.execute(query)
     result = cr.fetchall()
-    return render(request, 'user/viewBooks.html', {'result': result})
+    return render(request, 'user/viewBooks.html', {'result': result, 'memberid': memberid})
+
 
 def deleteBook(request):
-    id =request.GET['id']
+    id = request.GET['id']
     query = "DELETE FROM `books` WHERE id='{}'".format(id)
     conn = makeConnections()
     cr = conn.cursor()
@@ -366,18 +373,17 @@ def addEbook(request):
     return render(request, 'user/addEbooks.html', {'result': result, 'id': id})
 
 
-
 def viewEBook(request):
-    query ="SELECT ebook.id,ebook.ISBN, ebook.title,ebook.section,section.name as sectionName, ebook.edition, ebook.descripiton,ebook.author,ebook.price, ebook.file FROM `ebook` INNER JOIN section on ebook.section = section.id"
+    query = "SELECT ebook.id,ebook.ISBN, ebook.title,ebook.section,section.name as sectionName, ebook.edition, ebook.descripiton,ebook.author,ebook.price, ebook.file FROM `ebook` INNER JOIN section on ebook.section = section.id"
     conn = makeConnections()
     cr = conn.cursor()
     cr.execute(query)
     result = cr.fetchall()
-    return render(request,'user/viewEbooks.html',{'result':result})
+    return render(request, 'user/viewEbooks.html', {'result': result})
 
 
 def deleteEbook(request):
-    id =request.GET['id']
+    id = request.GET['id']
     query = "DELETE FROM `ebook` WHERE id='{}'".format(id)
     conn = makeConnections()
     cr = conn.cursor()
@@ -385,3 +391,36 @@ def deleteEbook(request):
     conn.commit()
     messages.warning(request, 'Successfully add book {}'.format(id))
     return redirect('viewEBook')
+
+
+def viewActiveMember(request):
+    query = "SELECT `id`, `dateofjoining`, `campus`, `department`, `typeOfMember` FROM `membership` WHERE `membershipStatus`='Active'"
+    conn = makeConnections()
+    cr = conn.cursor()
+    cr.execute(query)
+    result = cr.fetchall()
+    columnName = [name[0] for name in cr.description]
+    print(columnName)
+    return render(request, 'user/activeMembers.html', {'result': result, 'columnName': columnName})
+
+
+def ishuBook(request):
+    bookid = request.GET['bookid']
+    memberid = request.GET['memberid']
+    todaydate = datetime.date.today()
+    expDire = todaydate + datetime.timedelta(14)
+
+    query = "select * from `transaction` where `membershipId`='{}' and bookid='{}' and Fine is null".format(memberid,bookid)
+    print(query)
+    conn = makeConnections()
+    cr = conn.cursor()
+    cr.execute(query)
+    result = cr.fetchall()
+    if len(result)>0:
+        messages.warning(request,'Book already issud to member id: {}'.format(memberid))
+    else:
+        query = f"INSERT INTO `transaction`(`bookid`, `membershipId`, `dateofissue`, `dateofReturn`) VALUES ('{bookid}','{memberid}','{todaydate}','{expDire}')"
+        cr.execute(query)
+        conn.commit()
+        messages.success(request,'Book ishu to member id: {}'.format(memberid))
+    return redirect('viewActiveMember')

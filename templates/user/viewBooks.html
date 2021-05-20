@@ -42,22 +42,31 @@
                     <th>author</th>
                     <th>price</th>
                     <th>Action</th>
+                    {% if memberid != 'No' %}
+                        <th>Ishu</th>
+                    {% endif %}
                 </tr>
                 </thead>
                 <tbody>
                 {% for re in result %}
                     <tr>
-                    <td>{{ re.ISBN }}</td>
-                    <td>{{ re.title }}</td>
-                    <td>{{ re.sectionName }}</td>
-                    <td>{{ re.qty }}</td>
-                    <td>{{ re.edition }}</td>
-                    <td>{{ re.descripiton }}</td>
-                    <td>{{ re.author }}</td>
-                    <td>{{ re.price }}</td>
-                    <td>
-                        <a href="deleteBook?id={{ re.id }}" onclick="return confirm('Are you Sure to Delete')" class="btn btn-danger">Delete</a>
-                    </td>
+                        <td>{{ re.ISBN }}</td>
+                        <td>{{ re.title }}</td>
+                        <td>{{ re.sectionName }}</td>
+                        <td>{{ re.qty }}</td>
+                        <td>{{ re.edition }}</td>
+                        <td>{{ re.descripiton }}</td>
+                        <td>{{ re.author }}</td>
+                        <td>{{ re.price }}</td>
+                        <td>
+                            <a href="deleteBook?id={{ re.id }}" onclick="return confirm('Are you Sure to Delete')"
+                               class="btn btn-danger">Delete</a>
+                        </td>
+                        {% if memberid != 'No' %}
+                            <th>
+                                <a href="ishuBook?bookid={{ re.id }}&memberid={{ memberid }}" disabled="disabled" class="btn btn-warning">Ishu</a>
+                            </th>
+                        {% endif %}
                     </tr>
                 {% endfor %}
 

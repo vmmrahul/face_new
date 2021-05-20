@@ -54,4 +54,8 @@ urlpatterns = [
     path('addEbook',addEbook, name='addEbook'),
     path('viewEBook',viewEBook, name='viewEBook'),
     path('deleteEbook',deleteEbook, name='deleteEbook'),
+
+    # active members
+    path('viewActiveMember', viewActiveMember, name='viewActiveMember'),
+    path('ishuBook', ishuBook, name='ishuBook'),
 ]

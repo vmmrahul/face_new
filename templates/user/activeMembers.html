@@ -1,0 +1,50 @@
+{% extends 'user/user_bash.html' %}
+{% block title %}
+    active Member
+{% endblock %}
+
+
+{% block content %}
+    <div>
+        <div class="text-center">
+            <h1 class="jumbotron">Members</h1>
+        </div>
+        <hr>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="table-responsive">
+            <table id="myTable">
+                <thead>
+                <tr>
+                    {% for foo in columnName %}
+                        <th>{{ foo }}</th>
+                    {% endfor %}
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for re in result %}
+                    <tr>
+                        <td><a href="">{{ re.id }}</a></td>
+                        <td>{{ re.dateofjoining }}</td>
+                        <td>{{ re.campus }}</td>
+                        <td>{{ re.department }}</td>
+                        <td>{{ re.typeOfMember }}</td>
+                        <td><a href="viewBook?memberid={{ re.id }}" class="btn btn-primary">Ishu Books</a></td>
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
