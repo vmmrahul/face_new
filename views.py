@@ -227,13 +227,13 @@ def userLogin(request):
             messages.warning(request, 'Invalid Email or Password')
             return redirect('userLogin')
 
-    return render(request, 'user/UserLogin.html')
+    return render(request, 'library/UserLogin.html')
 
 
 def home(request):
     if not ('userLogin' in request.session):
         return redirect('userLogin')
-    return render(request, 'user/index.html')
+    return render(request, 'library/index.html')
 
 
 def Usersignout(request):
@@ -262,7 +262,7 @@ def addSection(request):
         conn.commit()
         messages.success(request, 'section Add Success Fully')
         return redirect('addSection')
-    return render(request, 'user/addSections.html')
+    return render(request, 'library/addSections.html')
 
 
 def viewSection(request):
@@ -271,7 +271,7 @@ def viewSection(request):
     cr = conn.cursor()
     cr.execute(query)
     result = cr.fetchall()
-    return render(request, 'user/viewSection.html', {'data': result})
+    return render(request, 'library/viewSection.html', {'data': result})
 
 
 def deleteSection(request):
@@ -313,7 +313,7 @@ def addbook(request):
         conn.commit()
         messages.success(request, 'Successfully add book {}'.format(title))
         return redirect('addbook')
-    return render(request, 'user/addBooks.html', {'result': result, 'id': id})
+    return render(request, 'library/addBooks.html', {'result': result, 'id': id})
 
 
 def viewBook(request):
@@ -326,7 +326,7 @@ def viewBook(request):
     cr = conn.cursor()
     cr.execute(query)
     result = cr.fetchall()
-    return render(request, 'user/viewBooks.html', {'result': result, 'memberid': memberid})
+    return render(request, 'library/viewBooks.html', {'result': result, 'memberid': memberid})
 
 
 def deleteBook(request):
@@ -370,7 +370,7 @@ def addEbook(request):
         conn.commit()
         messages.success(request, 'Successfully add book {}'.format(title))
         return redirect('addEbook')
-    return render(request, 'user/addEbooks.html', {'result': result, 'id': id})
+    return render(request, 'library/addEbooks.html', {'result': result, 'id': id})
 
 
 def viewEBook(request):
@@ -379,7 +379,7 @@ def viewEBook(request):
     cr = conn.cursor()
     cr.execute(query)
     result = cr.fetchall()
-    return render(request, 'user/viewEbooks.html', {'result': result})
+    return render(request, 'library/viewEbooks.html', {'result': result})
 
 
 def deleteEbook(request):
@@ -401,7 +401,7 @@ def viewActiveMember(request):
     result = cr.fetchall()
     columnName = [name[0] for name in cr.description]
     print(columnName)
-    return render(request, 'user/activeMembers.html', {'result': result, 'columnName': columnName})
+    return render(request, 'library/activeMembers.html', {'result': result, 'columnName': columnName})
 
 
 def ishuBook(request):
@@ -411,7 +411,6 @@ def ishuBook(request):
     expDire = todaydate + datetime.timedelta(14)
 
     query = "select * from `transaction` where `membershipId`='{}' and bookid='{}' and Fine is null".format(memberid,bookid)
-    print(query)
     conn = makeConnections()
     cr = conn.cursor()
     cr.execute(query)
@@ -424,3 +423,41 @@ def ishuBook(request):
         conn.commit()
         messages.success(request,'Book ishu to member id: {}'.format(memberid))
     return redirect('viewActiveMember')
+
+def viewIshuBooks(request):
+    id = request.GET['memberid']
+    status = request.GET['status']
+    todaydate = datetime.date.today()
+    if status == 'current':
+        query ="SELECT * FROM `transaction` where membershipId = '{}' and fine is null and `dateofReturn` > '{}'".format(id, todaydate)
+    elif status == 'return':
+        query = "SELECT * FROM `transaction` where membershipId = '{}' and fine is not null".format(id)
+    else:
+        query = "SELECT * FROM `transaction` where membershipId = '{}' and fine is null and `dateofReturn` < '{}'".format(id,todaydate)
+    conn = makeConnections()
+    cr = conn.cursor()
+    cr.execute(query)
+    result = cr.fetchall()
+    print(result)
+    return render(request, 'library/viewIsshuBooks.html',{'memberid':id,'results':result,'status':status})
+
+def collectFine(request):
+    id = request.GET['memberid']
+    status = request.GET['status']
+
+    todaydate = datetime.date.today()
+    issuID = request.POST['issuID']
+    fine = request.POST['fine']
+    payment = request.POST['payment']
+
+
+    query =f"UPDATE `transaction` SET `Fine`='{fine}',`fine_collect_date`='{todaydate}',`mode_of_payment`='{payment}' WHERE  `tid`='{issuID}'"
+
+    conn = makeConnections()
+    cr = conn.cursor()
+    cr.execute(query)
+    conn.commit()
+    messages.success(request, 'Success Fully Collected fine')
+    return HttpResponseRedirect(f'viewIshuBooks?memberid={id}&status={status}')
+
+

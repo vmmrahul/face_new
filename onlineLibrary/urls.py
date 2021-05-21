@@ -58,4 +58,6 @@ urlpatterns = [
     # active members
     path('viewActiveMember', viewActiveMember, name='viewActiveMember'),
     path('ishuBook', ishuBook, name='ishuBook'),
+    path('viewIshuBooks', viewIshuBooks, name='viewIshuBooks'),
+    path('collectFine', collectFine, name='collectFine'),
 ]

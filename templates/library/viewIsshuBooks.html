@@ -1,0 +1,132 @@
+{% extends 'library/user_bash.html' %}
+{% block title %}
+    {{ memberid }} | books
+{% endblock %}
+
+
+{% block content %}
+
+    <div>
+        <div class="text-center">
+            <h1>Isshu Books to {{ memberid }}</h1>
+        </div>
+        <hr>
+        <ul class="nav nav-pills nav-fill">
+            <li class="nav-item">
+                <a class="nav-link {% if status == 'current' %}
+                active
+                {% endif %}" aria-current="page" href="viewIshuBooks?memberid={{ memberid }}&status=current">Current
+                    books</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status == 'return' %}
+                active
+                {% endif %}" href="viewIshuBooks?memberid={{ memberid }}&status=return">Return Books</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status == 'fine' %}
+                active bg-danger
+                {% endif %}" href="viewIshuBooks?memberid={{ memberid }}&status=fine">Finded Book</a>
+            </li>
+        </ul>
+        <hr>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Bookid</th>
+                    <th>Membership Id</th>
+                    <th>Date of Ishu</th>
+                    <th>Date of Return</th>
+                    <th>Fine</th>
+                    <th>Collect Date</th>
+                    <th>Mode of Payment</th>
+                    {% if status == 'current' or status == 'fine' %}
+                        <th>Action</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ result.bookid }}</td>
+                        <td>{{ result.membershipId }}</td>
+                        <td>{{ result.dateofissue }}</td>
+                        <td>{{ result.dateofReturn }}</td>
+                        <td>{{ result.Fine }}</td>
+                        <td>{{ result.fine_collect_date }}</td>
+                        <td>{{ result.mode_of_payment }}</td>
+                        {% if status == 'current' %}
+                            <td>Current</td>
+                        {% elif status == 'fine' %}
+                            <td>
+                                <button type="button" onclick="openModel({{ result.tid }})" class="btn btn-warning">
+                                    Collect Fine
+                                </button>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Pay you Fine</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="collectFine?memberid={{ memberid }}&status=return" method="post">{% csrf_token %}
+                        <div class="form-group">
+                            <label for="issuID">issuID</label>
+                            <input type="text" id="issuID" name="issuID" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="find">Amount</label>
+                            <input type="number" id="fine" min="1" name="fine" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment">payment Mode</label>
+                            <select name="payment" id="payment" class="form-control">
+                                <option value="Online">Online</option>
+                                <option value="Cash">Cash</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function openModel(id) {
+            $('#issuID').val(id);
+            $('#exampleModalCenter').modal('show');
+        }
+    </script>
+{% endblock %}

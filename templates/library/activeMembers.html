@@ -1,4 +1,4 @@
-{% extends 'user/user_bash.html' %}
+{% extends 'library/user_bash.html' %}
 {% block title %}
     active Member
 {% endblock %}
@@ -28,6 +28,7 @@
                         <th>{{ foo }}</th>
                     {% endfor %}
                     <th>Action</th>
+                    <th>BooksIssu</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,6 +40,7 @@
                         <td>{{ re.department }}</td>
                         <td>{{ re.typeOfMember }}</td>
                         <td><a href="viewBook?memberid={{ re.id }}" class="btn btn-primary">Ishu Books</a></td>
+                        <td class="text-center"><a href="viewIshuBooks?memberid={{ re.id }}&status=current" class="btn btn-primary">View</a></td>
                     </tr>
                 {% endfor %}
 
