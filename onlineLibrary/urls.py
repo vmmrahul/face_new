@@ -39,7 +39,7 @@ urlpatterns = [
 
     #    User Side Work Start
     #    Login Page
-    path('', userLogin, name='userLogin'),
+    path('library', userLogin, name='userLogin'),
     path('home', home, name='home'),
     path('Usersignout', Usersignout, name='Usersignout'),
     path('addSection', addSection, name='addSection'),
@@ -60,4 +60,13 @@ urlpatterns = [
     path('ishuBook', ishuBook, name='ishuBook'),
     path('viewIshuBooks', viewIshuBooks, name='viewIshuBooks'),
     path('collectFine', collectFine, name='collectFine'),
+
+
+    # user InterFace
+    path('',index, name="index"),
+    path('searchebooks',searchebooks, name="searchebooks"),
+    path('searchebooksAction',searchebooksAction, name="searchebooksAction"),
+    path('searchBooks',searchBooks, name="searchBooks"),
+    path('searchbooksAction',searchbooksAction, name="searchbooksAction"),
+    path('contactUs',contactUs, name="contactUs"),
 ]

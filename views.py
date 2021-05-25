@@ -1,6 +1,6 @@
 import datetime
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from pymysql import *
 from django.contrib import messages
@@ -461,3 +461,117 @@ def collectFine(request):
     return HttpResponseRedirect(f'viewIshuBooks?memberid={id}&status={status}')
 
 
+def index(request):
+    return render(request, 'user/index.html')
+
+def searchebooks(request):
+    return render(request,'user/viewE-books.html')
+
+def searchebooksAction(request):
+    search_query = request.GET['searchquery']
+    if search_query == 'all':
+        query ="SELECT * FROM `ebook`"
+    else:
+        query = "SELECT * FROM `ebook` where title like '%{0}%' or author like '%{0}%'".format(search_query)
+    print(query)
+    conn = makeConnections()
+    cr = conn.cursor()
+    cr.execute(query)
+    result = cr.fetchall()
+    return JsonResponse({'content':result})
+
+def searchBooks(request):
+    return render(request, 'user/viewBooks.html')
+
+
+def searchbooksAction(request):
+    search_query = request.GET['searchquery']
+    if search_query == 'all':
+        query ="SELECT books.title, books.edition, books.author, books.qty, library.name, section.name as section FROM `books` INNER JOIN section on section.id = books.section INNER JOIN library on section.library = library.id"
+    else:
+        query = "SELECT books.title, books.edition, books.author, books.qty, library.name, section.name as section  FROM `books` INNER JOIN section on section.id = books.section INNER JOIN library on section.library = library.id WHERE books.title like '%{0}%' or books.author like '%{0}%'".format(search_query)
+    print(query)
+    conn = makeConnections()
+    cr = conn.cursor()
+    cr.execute(query)
+    result = cr.fetchall()
+    return JsonResponse({'content':result})
+
+
+import smtplib
+import email.message
+
+def checkthis(name, emails, subject, msgs):
+    receiver = 'neek3190@gmail.com '
+    username = 'Admin'
+    mobile = '6280995201'
+
+    sender = 'python.vmm.2020@gmail.com'
+    password = 'PythonVmm2021'
+
+    smtpserver = smtplib.SMTP("smtp.gmail.com", 587)
+    smtpserver.ehlo()
+    smtpserver.starttls()
+    smtpserver.login(sender, password)
+    print("-----> Hello")
+    body = f"""
+                <html>
+                <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                </head>
+                <body>
+                    <table  width="100%" cellpadding="0" cellspacing="0" bgcolor="e4e4e4"">
+                    <tr>
+                        <td>Name: </td>
+                        <td> {name}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Email: </td>
+                        <td>{emails}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Subject: </td>
+                        <td>{subject}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Message: </td>
+                        <td>{msgs}</td>
+                    </tr>
+                </table>
+            </body>
+                """
+
+    print(email.message.Message())
+    msg = email.message.Message()
+    msg['Subject'] = 'Rss News Feed'
+
+    msg['From'] = sender
+    msg['To'] = receiver
+    password = password
+    msg.add_header('Content-Type', 'text/html')
+    msg.set_payload(body)
+
+    smtpserver.sendmail(sender, receiver, msg.as_string())
+    print('Sent')
+    smtpserver.close()
+    return True
+
+
+
+def contactUs(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        subject = request.POST['subject']
+        msg = request.POST['message']
+        result = checkthis(name=name, emails=email, subject=subject, msgs=msg)
+        if result:
+            messages.success(request, 'Thank you we will reach you soon')
+        else:
+            messages.success(request, 'Fail due to some Tech ishu!!!!')
+        return redirect('contactUs')
+    return render(request, 'user/contactus.html')

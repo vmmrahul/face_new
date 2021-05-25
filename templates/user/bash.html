@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>BookShop {% block title %}
+
+    {% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+          referrerpolicy="no-referrer"/>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'lightbox/dist/css/lightbox.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    {% block csslink %}
+
+    {% endblock %}
+    <style>
+        body {
+            /*background: linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.8)),url("../images/header-bg.jpeg") fixed center no-repeat;*/
+            font-family: 'Montserrat', sans-serif;
+            background: #eee;
+            overflow-x: hidden;
+        }
+
+        /*header*/
+        #navheader {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, .4), rgba(0, 0, 0, .5)), url("{% static 'images/jez-timms-_ubXaS2zcs4-unsplash.jpg' %}") no-repeat center center/cover;
+        }
+
+        .ourservices {
+            background: linear-gradient(rgba(0, 0, 0, .7), rgba(0, 0, 0, .8)), url("{% static 'images/header-bg.jpeg' %}") fixed center no-repeat;
+        }
+
+        .underline {
+            width: 150px;
+            border: 3px solid #eee;
+            margin: auto;
+        }
+    </style>
+    {% block style %}
+
+    {% endblock %}
+</head>
+<body>
+<header id="{% if request.path == '/' %}navheader{% endif %}">
+    <nav class="navbar navbar-expand-lg fixed-top nav-menu">
+        <a href="/" class="navbar-brand text-light text-uppercase"><img class="img-size"
+                                                                        src="{% static 'images/logo.png' %}" alt=""
+                                                                        width="100px"> Library</a>
+        <button class="navbar-toggler nav-button" type="button" data-toggle="collapse" data-target="#mynavbar">
+            <div class="bg-light line1"></div>
+            <div class="bg-light line2"></div>
+            <div class="bg-light line3"></div>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end text-uppercase font-weight-bold" id="mynavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="/" class="nav-link m-2 menu-item">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="searchebooks" class="nav-link m-2 menu-item">E-Books</a>
+                </li>
+                <li class="nav-item">
+                    <a href="searchBooks" class="nav-link m-2 menu-item">Books</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contactUs" class="nav-link m-2 menu-item">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+{% block content %}
+
+{% endblock %}
+
+<footer class="bg-dark">
+    <div class="container">
+        <div class="row pb-3">
+            <div class="col-12 p-4 text-center text-light">
+                <h1>Become Our Member</h1>
+            </div>
+            <div class="col-sm-10 col-12 m-auto">
+                <form class="form-inline border rounded mb-3 p-5" action="">
+                    <input type="email" placeholder="Email" class="form-control w-50 m-auto">
+                    <button type="button" class="btn btn-outline-danger w-25 m-auto">Send</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <div class="mb-2">
+                    <a href="https://www.facebook.com/" target="_blank" class="mx-sm--4 mx-2"><i
+                            class="fab fa-facebook-square fa-2x text-primary"></i></a>
+                    <a href="https://twitter.com" target="_blank" class="mx-sm--4 mx-2"><i
+                            class="fab fa-twitter fa-2x text-info"></i></a>
+                    <a href="https://www.instagram.com/" target="_blank" class="mx-sm--4 mx-2"><i
+                            class="fab fa-instagram fa-2x text-danger"></i></a>
+                    <a href="https://www.linkedin.com" target="_blank" class="mx-sm--4 mx-2"><i
+                            class="fab fa-linkedin fa-2x text-info"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid p-3">
+        <div class="row">
+            <div class="col mb-4">
+                <ul class="nav justify-content-center nav-tabs">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link text-light">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="searchebooks" class="nav-link text-light">E-Books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="searchBooks" class="nav-link text-light">Books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="contactUs" class="nav-link text-light">contactUs</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-light text-center">
+                <p>&copy; Copyright 2021.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!--end footer-->
+
+
+{#script file#}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="{% static 'main.js' %}"></script>
+<script src="{% static 'lightbox/dist/js/lightbox.js' %}"></script>
+
+{% block script %}
+
+{% endblock %}
+
+<style>
+    .error {
+        color: red;
+    }
+</style>
+</body>
+</html>
