@@ -418,10 +418,18 @@ def ishuBook(request):
     if len(result)>0:
         messages.warning(request,'Book already issud to member id: {}'.format(memberid))
     else:
-        query = f"INSERT INTO `transaction`(`bookid`, `membershipId`, `dateofissue`, `dateofReturn`) VALUES ('{bookid}','{memberid}','{todaydate}','{expDire}')"
-        cr.execute(query)
-        conn.commit()
-        messages.success(request,'Book ishu to member id: {}'.format(memberid))
+        querySelectBook = "SELECT qty FROM `books` where id = '{}'".format(bookid)
+        cr.execute(querySelectBook)
+        resultbook = cr.fetchone()
+        if int(resultbook['qty'])>0:
+            queryUpdateqty = "UPDATE `books` SET `qty`='{}' WHERE `id`={}".format(int(resultbook['qty'])-1,bookid)
+            query = f"INSERT INTO `transaction`(`bookid`, `membershipId`, `dateofissue`, `dateofReturn`) VALUES ('{bookid}','{memberid}','{todaydate}','{expDire}')"
+            cr.execute(query)
+            cr.execute(queryUpdateqty)
+            conn.commit()
+            messages.success(request,'Book ishu to member id: {}'.format(memberid))
+        else:
+            messages.success(request, 'Book No avilabel')
     return redirect('viewActiveMember')
 
 def viewIshuBooks(request):
@@ -450,11 +458,22 @@ def collectFine(request):
     fine = request.POST['fine']
     payment = request.POST['payment']
 
-
-    query =f"UPDATE `transaction` SET `Fine`='{fine}',`fine_collect_date`='{todaydate}',`mode_of_payment`='{payment}' WHERE  `tid`='{issuID}'"
-
     conn = makeConnections()
     cr = conn.cursor()
+
+    query = "SELECT `bookid` FROM `transaction` WHERE `tid`='{}'".format(issuID)
+    cr.execute(query)
+    bookid = cr.fetchone()['bookid']
+
+    querySelectBook = "SELECT qty FROM `books` where id = '{}'".format(bookid)
+    cr.execute(querySelectBook)
+    resultbook = cr.fetchone()
+    queryUpdateqty = "UPDATE `books` SET `qty`='{}' WHERE `id`={}".format(int(resultbook['qty']) + 1, bookid)
+    cr.execute(queryUpdateqty)
+    resultbook = cr.fetchone()
+    query =f"UPDATE `transaction` SET `Fine`='{fine}',`fine_collect_date`='{todaydate}',`mode_of_payment`='{payment}' WHERE  `tid`='{issuID}'"
+
+
     cr.execute(query)
     conn.commit()
     messages.success(request, 'Success Fully Collected fine')
@@ -487,9 +506,9 @@ def searchBooks(request):
 def searchbooksAction(request):
     search_query = request.GET['searchquery']
     if search_query == 'all':
-        query ="SELECT books.title, books.edition, books.author, books.qty, library.name, section.name as section FROM `books` INNER JOIN section on section.id = books.section INNER JOIN library on section.library = library.id"
+        query ="SELECT books.title, books.edition, books.author, books.qty, library.name, section.name as section FROM `books` INNER JOIN section on section.id = books.section INNER JOIN library on section.library = library.id where qty >0"
     else:
-        query = "SELECT books.title, books.edition, books.author, books.qty, library.name, section.name as section  FROM `books` INNER JOIN section on section.id = books.section INNER JOIN library on section.library = library.id WHERE books.title like '%{0}%' or books.author like '%{0}%'".format(search_query)
+        query = "SELECT books.title, books.edition, books.author, books.qty, library.name, section.name as section  FROM `books` INNER JOIN section on section.id = books.section INNER JOIN library on section.library = library.id WHERE books.title like '%{0}%' or books.author like '%{0}%' and qty >0".format(search_query)
     print(query)
     conn = makeConnections()
     cr = conn.cursor()

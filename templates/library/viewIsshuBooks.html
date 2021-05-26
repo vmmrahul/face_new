@@ -67,7 +67,11 @@
                         <td>{{ result.fine_collect_date }}</td>
                         <td>{{ result.mode_of_payment }}</td>
                         {% if status == 'current' %}
-                            <td>Current</td>
+                            <td>
+                                <button type="button" onclick="openModel({{ result.tid }})" class="btn btn-primary">
+                                    Collect Fine
+                                </button>
+                            </td>
                         {% elif status == 'fine' %}
                             <td>
                                 <button type="button" onclick="openModel({{ result.tid }})" class="btn btn-warning">
@@ -102,7 +106,7 @@
                         </div>
                         <div class="form-group">
                             <label for="find">Amount</label>
-                            <input type="number" id="fine" min="1" name="fine" class="form-control" required>
+                            <input type="number" id="fine" min="0" name="fine" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="payment">payment Mode</label>
